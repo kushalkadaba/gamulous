@@ -1,0 +1,15 @@
+# Solution files
+*.sdf
+*.sln
+
+#Visual studio project files
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+
+#Executables
+.exe
+
+#Authors and license
+AUTHORS
+LICENSE
