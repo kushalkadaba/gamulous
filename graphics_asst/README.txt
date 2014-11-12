@@ -1,16 +1,16 @@
-Changes made in rigtform.h
-1) Added constructor with parameters (Cvec3, Quant)
-2) Added constructor with parameter (Cvec3)
-3) Added transFact, linFact, doMwrtA, makeMixedFrame and rigTFormToMatrix in terms of RigTForm instead of Matrix4 form.
+Changes made in Picker.cpp
+1) Added code in all the TODOs, to maintain node stack 
+2) Implemented getRbtNodeAtXY using colorToId
 
-Changes made in asst3.cpp
-1) Line no. 200 added g_arcball as a global handle to Geometry object
-2) Line no. 245 - 255, added initArcBall to make the sphere geometry for arc ball
-3) Line no. 288- 297, added getArcBallRBT to return the current arc ball based on the viewmode and current object being manipulated.
-4) Line no. 339 - 358, added code to draw the arcball in wireframe mode.
-5) Line no. 383 - 391, added getDirection to get the normalized vector between the screen arcball center and the mouse click.
-6) Line no. 394 - 434, added getMRbt() to get the M (manipulation rigtform).
-7) Line no. 591 - 606, added case 'a' to handle enable/disable arcball. 
+Changes made in scenegraph.cpp
+1) Added code in visit and postvisit to maintain node stack
+2) Implemented the getAccumulatedRbt
 
-Changes made in matrix4.h
-1) Removed doMwrtA, transFact & linFact.
+Changes made in asst4.cpp
+1) Copied from asst3.cpp
+2) Added new shader files used while picking.
+3) Replaced the pointers to the cubes with shared_ptr to robot nodes.
+4) Implemented the constructRobot function to draw the robots.
+5) Changed drawStuff function to use a different shader when picking.
+6) Changed the reset function to reset all the parts.
+7) Added functionality for 'p' key.

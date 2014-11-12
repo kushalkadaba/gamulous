@@ -71,7 +71,7 @@ public:
 	// TODO:
 	// ======
 	  Quat rotation = r_ * a.r_;
-	  Cvec3 translation = Cvec3(r_*Cvec4(a.t_,0.0))+t_;
+	  Cvec3 translation = Cvec3(Cvec4(t_)+r_*Cvec4(a.t_));
 	  return RigTForm(translation,rotation);
   }
 };
@@ -106,7 +106,7 @@ inline RigTForm const doMtoOwrtA(const RigTForm& M,const RigTForm& O, const RigT
 	return A*M*inv(A)*O;
 }
 
-inline const RigTForm makeMixedFrame(const RigTForm& R,const RigTForm& T){
+inline const RigTForm makeMixedFrame(const RigTForm& T,const RigTForm& R){
 	return transFact(T)*linFact(R);
 }
 #endif
