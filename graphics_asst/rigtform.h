@@ -109,4 +109,27 @@ inline RigTForm const doMtoOwrtA(const RigTForm& M,const RigTForm& O, const RigT
 inline const RigTForm makeMixedFrame(const RigTForm& T,const RigTForm& R){
 	return transFact(T)*linFact(R);
 }
+/*=================================================================
+11/08 Linear Interpolation
+=================================================================*/
+inline RigTForm lerp(const RigTForm& tform0, const RigTForm& tform1, const double alpha)
+{
+	Cvec3 t = lerp<double,3>(tform0.getTranslation(),tform1.getTranslation(),alpha);
+	Quat q = slerp(tform0.getRotation(), tform1.getRotation(), alpha);
+	return RigTForm(t,q);
+}
+
+inline std::ostream& operator<<(std::ostream& os, RigTForm& r){
+	os << r.getRotation()<< std::endl;
+	os << r.getTranslation() << std::endl;
+	return os;
+}
+inline std::istream& operator>>(std::istream& is, RigTForm& r){
+	double w,x,y,z;
+	is >> x >>y>>z;
+	r.setRotation(Quat(1,x,y,z));
+	is >> x >> y>> z;
+	r.setTranslation(Cvec3(x,y,z));
+	return is;
+}
 #endif

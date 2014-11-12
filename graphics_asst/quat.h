@@ -109,6 +109,10 @@ public:
     r.q_[0] = std::cos(h);
     return r;
   }
+  Quat& operator-(){
+	  q_ *= -1;
+	  return *this;
+  }
 };
 
 inline double dot(const Quat& q, const Quat& p) {
@@ -154,4 +158,32 @@ inline Matrix4 quatToMatrix(const Quat& q) {
   return r;
 }
 
+/*=================================================================
+11/08 Linear Interpolation
+=================================================================*/
+inline Quat pow(const Quat& q, const double exponent){
+	double a = norm(Cvec3(q(1),q(2),q(3)));
+	double phi = atan2(a,q(0));
+	phi *= exponent;
+	Cvec3 k(q(1),q(2),q(3));
+
+	double len = sqrt(k(0)*k(0)+k(1)*k(1)+k(2)*k(2));
+	if(len >CS175_EPS2)
+		k /= len;
+	return Quat(cos(phi), k*sin(phi));
+}
+inline Quat slerp(const Quat& q0, const Quat& q1, const double alpha){
+	Quat q = (q1*inv(q0));
+	if(q(0) < 0)		//conditional negation to make it take the shortest path
+		q = -q;
+	return pow(q,alpha)*q0;
+}
+inline std::ostream& operator<<(std::ostream& os, Quat& q){
+	os << q(0)<<" "<<q(1)<<" "<<q(2)<<" "<<q(3);
+	return os;
+}
+inline std::istream& operator>>(std::istream& is, Quat& q){
+	is >> q(1)>>q(2)>>q(3);
+	return is;
+}
 #endif

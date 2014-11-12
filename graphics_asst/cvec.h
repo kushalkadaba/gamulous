@@ -3,7 +3,7 @@
 
 #include <cmath>
 #include <cassert>
-
+#include <iostream>
 
 static const double CS175_PI = 3.14159265358979323846264338327950288;
 static const double CS175_EPS = 1e-8;
@@ -173,4 +173,30 @@ typedef Cvec <unsigned char, 2> Cvec2ub;
 typedef Cvec <unsigned char, 3> Cvec3ub;
 typedef Cvec <unsigned char, 4> Cvec4ub;
 
+/*=================================================================
+11/08 Linear Interpolation
+=================================================================*/
+template<typename T, int n>
+inline Cvec<T, n> lerp(
+const Cvec<T, n>& v0,
+const Cvec<T, n>& v1,
+const T alpha){
+	return v0*(1-alpha) + v1*(alpha);
+}
+template<typename T, int n>
+inline std::ostream& operator<<(std::ostream& os, Cvec<T,n>& v){
+	for (int i = 0; i < n; ++i) {
+		os<<v(i)<<" ";
+	}
+	return os;
+}
+template<typename T, int n>
+inline std::istream& operator>>(std::istream& is, Cvec<T,n>& v){
+	double d;
+	for (int i = 0; i < n; ++i) {
+		is>>d;
+		v(i) = d;
+	}
+	return is;
+}
 #endif
