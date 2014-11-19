@@ -125,11 +125,22 @@ inline std::ostream& operator<<(std::ostream& os, RigTForm& r){
 	return os;
 }
 inline std::istream& operator>>(std::istream& is, RigTForm& r){
-	double w,x,y,z;
+	double x,y,z;
 	is >> x >>y>>z;
 	r.setRotation(Quat(1,x,y,z));
 	is >> x >> y>> z;
 	r.setTranslation(Cvec3(x,y,z));
 	return is;
+}
+/*=================================================================
+11/17 CatmullRom Interpolation
+=================================================================*/
+inline RigTForm interpolateCatmullRom(const RigTForm& tform0,const RigTForm& tform1,
+	const RigTForm& tform2,const RigTForm& tform3,const double alpha){
+	Cvec3 t = interpolateCatmullRom(tform0.getTranslation(),tform1.getTranslation(),
+		tform2.getTranslation(), tform3.getTranslation(), alpha);
+	Quat q = interpolateCatmullRom(tform0.getRotation(), tform1.getRotation(),
+		tform2.getRotation(), tform3.getRotation(), alpha);
+	return RigTForm(t,q);
 }
 #endif

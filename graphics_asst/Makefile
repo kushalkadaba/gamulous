@@ -1,4 +1,4 @@
-BASE = asst4
+BASE = asst6
 
 all: $(BASE)
 
@@ -12,10 +12,7 @@ endif
 
 ifeq ($(OS), Darwin) # Assume OS X
   CPPFLAGS += -D__MAC__
-  CPPFLAGS += -I/usr/include
   LDFLAGS += -framework GLUT -framework OpenGL
-  # suppress the warnings about deprecated glu/glut functions on Mavericks
-  CXXFLAGS += -Wno-deprecated
 endif
 
 ifdef OPT 
@@ -28,11 +25,10 @@ endif
 
 CXX = g++ 
 
-OBJ = $(BASE).o ppm.o glsupport.o scenegraph.o picker.o
+OBJ = $(BASE).o ppm.o glsupport.o scenegraph.o picker.o geometry.o material.o renderstates.o texture.o
 
 $(BASE): $(OBJ)
-	# $(LINK.cpp) -o $@ $^ $(LIBS) -lGLEW 
-	$(LINK.cpp) -o $@ $^ $(LIBS) /usr/lib/libGLEW.a
+	$(LINK.cpp) -o $@ $^ $(LIBS) -lGLEW 
 
 clean:
 	rm -f $(OBJ) $(BASE)

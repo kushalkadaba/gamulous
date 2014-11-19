@@ -1,54 +1,57 @@
 #include <GL/glew.h>
 
+#include "uniforms.h"
 #include "picker.h"
 
 using namespace std;
 // using namespace std::tr1;
 
-Picker::Picker(const RigTForm& initialRbt, const ShaderState& curSS)
-  : drawer_(initialRbt, curSS)
+Picker::Picker(const RigTForm& initialRbt, Uniforms& uniforms)
+  : drawer_(initialRbt, uniforms)
   , idCounter_(0)
   , srgbFrameBuffer_(!g_Gl2Compatible) {}
 
 bool Picker::visit(SgTransformNode& node) {
-  // TODO
-	nodeStack_.push_back(node.shared_from_this());
-	 return drawer_.visit(node);
+  nodeStack_.push_back(node.shared_from_this());
+  return drawer_.visit(node);
 }
 
 bool Picker::postVisit(SgTransformNode& node) {
-  // TODO
-	nodeStack_.pop_back();
+  nodeStack_.pop_back();
   return drawer_.postVisit(node);
 }
 
 bool Picker::visit(SgShapeNode& node) {
-  // TODO
-	idCounter_++;
-	for(size_t i =nodeStack_.size()-1; i>=0; i--){
-		shared_ptr<SgRbtNode> q = dynamic_pointer_cast<SgRbtNode>(nodeStack_[i]);
-		if(q!=NULL){
-			addToMap(idCounter_,q);
-			break;
-		}
-	}
-	const ShaderState& currSS = drawer_.getCurSS();
-	Cvec3 nodeColor = idToColor(idCounter_);
-	safe_glUniform3f(currSS.h_uIdColor, nodeColor[0],nodeColor[1],nodeColor[2]);
+  idCounter_++;
+  for (int i = nodeStack_.size() - 1; i >= 0; --i) {
+    shared_ptr<SgRbtNode> asRbtNode = dynamic_pointer_cast<SgRbtNode>(nodeStack_[i]);
+    if (asRbtNode) {
+      addToMap(idCounter_, asRbtNode);
+      break;
+    }
+  }
+  const Cvec3 idColor = idToColor(idCounter_);
+
+  // DEBUG OUTPUT
+  cerr << idCounter_ << " => " << idColor[0] << ' ' << idColor[1] << ' ' << idColor[2] << endl;
+
+  drawer_.getUniforms().put("uIdColor", idColor);
   return drawer_.visit(node);
 }
 
 bool Picker::postVisit(SgShapeNode& node) {
-  // TODO
-	return drawer_.postVisit(node);
+  return drawer_.postVisit(node);
 }
 
 shared_ptr<SgRbtNode> Picker::getRbtNodeAtXY(int x, int y) {
-  // TODO
-	PackedPixel nodeColor;
-	glReadPixels(x,y,1,1,GL_RGB,GL_UNSIGNED_BYTE,&nodeColor);
-	return find(colorToId(nodeColor));
-  //return shared_ptr<SgRbtNode>(); // return null for now
+  PackedPixel query;
+  glReadPixels(x, y, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, &query);
+  const int id = colorToId(query);
+
+  // DEBUG OUTPUT
+  cerr << int(query.r) << ' ' << int(query.g) << ' ' << int(query.b) << " => " << id << endl;
+
+  return find(id);
 }
 
 //------------------

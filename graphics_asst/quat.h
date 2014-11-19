@@ -186,4 +186,19 @@ inline std::istream& operator>>(std::istream& is, Quat& q){
 	is >> q(1)>>q(2)>>q(3);
 	return is;
 }
+/*=================================================================
+11/17 CatmullRom Interpolation
+=================================================================*/
+inline Quat interpolateCatmullRom(const Quat& q0,const Quat& q1,
+	const Quat& q2,	const Quat& q3,const double alpha){
+	Quat q = (q2*inv(q0));
+	if(q(0) < 0)		//conditional negation to make it take the shortest path
+		q = -q;
+	Quat d = pow(q,1/6)*q1;
+	q = (q3*inv(q1));
+	if(q(0) < 0)		//conditional negation to make it take the shortest path
+		q = -q;
+	Quat e = pow(q,-1/6)*q2;
+	return slerp(d, e, alpha);
+}
 #endif

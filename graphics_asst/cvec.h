@@ -199,4 +199,16 @@ inline std::istream& operator>>(std::istream& is, Cvec<T,n>& v){
 	}
 	return is;
 }
+/*=================================================================
+11/17 CatmullRom Interpolation
+=================================================================*/
+template<typename T, int n>
+inline Cvec<T, n> interpolateCatmullRom(const Cvec<T, n>& v0,const Cvec<T, n>& v1,
+	const Cvec<T, n>& v2,const Cvec<T, n>& v3,const T alpha)
+{
+	Cvec<T, n> d = (v2 - v0)*1/6 + v1;
+	Cvec<T, n> e = (v3 - v1)*1/6 + v2;
+	return lerp(d,e,alpha);
+}
+
 #endif
